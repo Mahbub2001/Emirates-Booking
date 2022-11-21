@@ -1,31 +1,37 @@
 import React, { useContext, useState } from 'react'
-import { format } from 'date-fns'
-import AddServiceForm from '../Components/Form/AddServiceForm'
-import { getImageUrl } from '../api/imageUpload'
-import { addHome } from '../api/services'
-import { AuthContext } from '../contexts/AuthProvider'
+import AddServiceForm from '../../Components/Form/AddServiceForm'
+import { imageUpload } from '../../api/imageUpload'
+import { addHome } from '../../api/services'
+import { AuthContext } from '../../contexts/AuthProvider'
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 const AddHome = () => {
+  const navigate = useNavigate()
   const { user } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
+  const [preview, setPreview] = useState('')
+  const [uploadButtonText, setUploadButtonText] = useState('Upload Image')
   const [arrivalDate, setArrivalDate] = useState(new Date())
   const [departureDate, setDepartureDate] = useState(
     new Date(arrivalDate.getTime() + 24 * 60 * 60 * 1000)
   )
-
+  console.log()
   const handleSubmit = event => {
     event.preventDefault()
     const location = event.target.location.value
     const title = event.target.title.value
-    const from = format(arrivalDate, 'P')
-    const to = format(departureDate, 'P')
+    const from = arrivalDate
+    const to = departureDate
     const price = event.target.price.value
     const total_guest = event.target.total_guest.value
     const bedrooms = event.target.bedrooms.value
     const bathrooms = event.target.bathrooms.value
     const description = event.target.description.value
     const image = event.target.image.files[0]
-    getImageUrl(image)
-      .then(data => {
+    setLoading(true)
+    imageUpload(image)
+      .then(res => {
         const homeData = {
           location,
           title,
@@ -36,19 +42,30 @@ const AddHome = () => {
           bedrooms,
           bathrooms,
           description,
-          image: data,
+          image: res.data.display_url,
           host: {
             name: user?.displayName,
             image: user?.photoURL,
             email: user?.email,
           },
         }
-
         addHome(homeData).then(data => {
           console.log(data)
+          setLoading(false)
+          toast.success('Home Added!')
+          navigate('/dashboard/manage-homes')
         })
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        setLoading(false)
+      })
+  }
+
+  const handleImageChange = image => {
+    console.log(image)
+    setPreview(window.URL.createObjectURL(image))
+    setUploadButtonText(image.name)
   }
   return (
     <>
@@ -61,6 +78,10 @@ const AddHome = () => {
         setArrivalDate={setArrivalDate}
         departureDate={departureDate}
         setDepartureDate={setDepartureDate}
+        loading={loading}
+        handleImageChange={handleImageChange}
+        preview={preview}
+        uploadButtonText={uploadButtonText}
       />
     </>
   )

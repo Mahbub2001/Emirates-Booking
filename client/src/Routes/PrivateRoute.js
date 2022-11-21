@@ -8,7 +8,11 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation()
   console.log(loading)
   if (loading) {
-    return <Spinner />
+    return (
+      <div className='h-screen'>
+        <Spinner />
+      </div>
+    )
   }
 
   if (user && user.uid) {

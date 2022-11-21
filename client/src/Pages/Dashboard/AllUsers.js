@@ -8,7 +8,6 @@ const AllUsers = () => {
   useEffect(() => {
     getUsers()
   }, [])
-
   const handleRequest = user => {
     makeHost(user).then(data => {
       console.log(data)
@@ -22,8 +21,6 @@ const AllUsers = () => {
       setLoading(false)
     })
   }
-
-  console.log(users)
   return (
     <div className='container mx-auto px-4 sm:px-8'>
       <div className='py-8'>

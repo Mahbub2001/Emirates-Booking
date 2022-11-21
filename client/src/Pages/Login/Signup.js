@@ -31,7 +31,7 @@ const Signup = () => {
     const image = event.target.image.files[0]
     const formData = new FormData()
     formData.append('image', image)
-    const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_IMAGE_API}`
+    const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_IMGBB_KEY}`
 
     fetch(url, {
       method: 'POST',
@@ -49,6 +49,7 @@ const Signup = () => {
                   toast.success(
                     'Please check your email for verification link.'
                   )
+                  setLoading(false)
                   navigate(from, { replace: true })
                 })
               )
@@ -65,8 +66,9 @@ const Signup = () => {
 
   const handleGoogleSignin = () => {
     signInWithGoogle().then(result => {
-      // console.log(result.user)
+      console.log(result.user)
       setAuthToken(result.user)
+      setLoading(false)
       navigate(from, { replace: true })
     })
   }

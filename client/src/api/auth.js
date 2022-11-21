@@ -4,7 +4,7 @@ export const setAuthToken = user => {
   }
 
   //   Save user in db & get token
-  fetch(`http://localhost:8000/user/${user?.email}`, {
+  fetch(`${process.env.REACT_APP_API_URL}/user/${user?.email}`, {
     method: 'PUT',
     headers: {
       'content-type': 'application/json',
@@ -17,4 +17,16 @@ export const setAuthToken = user => {
       //Save token in LocalStorage
       localStorage.setItem('aircnc-token', data.token)
     })
+}
+
+export const saveBooking = bookingData => {
+  // Post method fetch
+  return fetch(`${process.env.REACT_APP_API_URL}/bookings`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('aircnc-token')}`,
+    },
+    body: JSON.stringify(bookingData),
+  })
 }

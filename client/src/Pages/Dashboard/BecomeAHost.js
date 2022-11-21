@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { getImageUrl } from '../../api/imageUpload'
+import { imageUpload } from '../../api/imageUpload'
 import { getRole, hostRequest } from '../../api/user'
 import BecomeHostForm from '../../Components/Form/BecomeHostForm'
 import { AuthContext } from '../../contexts/AuthProvider'
@@ -8,11 +8,9 @@ const BecomeAHost = () => {
   const { user } = useContext(AuthContext)
   const [role, setRole] = useState(null)
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     setLoading(true)
     getRole(user?.email).then(data => {
-      console.log(data)
       setRole(data)
       setLoading(false)
     })
@@ -20,19 +18,27 @@ const BecomeAHost = () => {
   const handleSubmit = event => {
     event.preventDefault()
     const location = event.target.location.value
+
+    // Image Upload
     const image = event.target.image.files[0]
-    getImageUrl(image).then(data => {
-      const hostData = {
-        location: location,
-        documentImg: data,
-        role: 'requested',
-        email: user?.email,
-      }
+    // Upload ID image
+    imageUpload(image)
+      .then(result => {
+        const hostData = {
+          email: user?.email,
+          location: location,
+          documentImg: result.data.display_url,
+          role: 'requested',
+        }
+        // Send request do server
+        hostRequest(hostData)
+          .then(data => console.log(data))
+          .catch(err => console.log(err))
 
-      hostRequest(hostData).then(data => console.log(data))
-    })
+        setRole('requested')
+      })
+      .catch(err => console.log(err))
   }
-
   return (
     <>
       {role ? (

@@ -4,12 +4,18 @@ import ExpCard from '../Components/Card/ExpCard'
 import { Link } from 'react-router-dom'
 import HomeCard from '../Components/Card/HomeCard'
 import Spinner from '../Components/Spinner/Spinner'
+import { getAllHome } from '../api/services'
 
 const Home = () => {
   const [loading, setLoading] = useState(false)
   const [allExp, setAllExp] = useState([])
+  const [homes, setHomes] = useState([])
+
   useEffect(() => {
     setLoading(true)
+    getAllHome()
+      .then(data => setHomes(data))
+      .catch(err => console.log(err))
     fetch('expdata.json')
       .then(res => res.json())
       .then(data => {
@@ -23,26 +29,26 @@ const Home = () => {
       <div className='mt-4'>
         <SearchForm />
       </div>
-
-      <div className='flex-1'>
-        <div>
-          <div className='flex justify-between px-4 mt-10'>
-            <p className='text-xl font-bold'>Homes</p>
-            <Link to='/coming-soon'>
-              <p>See All</p>
-            </Link>
-          </div>
-          <div className='container pb-8 pt-2 mx-auto'>
-            <div className='flex flex-wrap'>
-              {[...Array(3)].map((_, i) => (
-                <HomeCard key={i} />
-              ))}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className='flex-1'>
+          <div>
+            <div className='flex justify-between px-4 mt-10'>
+              <p className='text-xl font-bold'>Homes</p>
+              <Link to='/all-homes'>
+                <p>See All</p>
+              </Link>
+            </div>
+            <div className='container pb-8 pt-2 mx-auto'>
+              <div className='flex flex-wrap'>
+                {homes.slice(0, 3).map((home, i) => (
+                  <HomeCard key={i} home={home} />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        {loading ? (
-          <Spinner />
-        ) : (
+
           <div>
             <div className='flex justify-between px-4'>
               <p className='text-xl font-bold'>Experiences</p>
@@ -58,8 +64,8 @@ const Home = () => {
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

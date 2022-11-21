@@ -23,6 +23,7 @@ const Login = () => {
       .then(result => {
         toast.success('Login Successful.....!')
         // Get Token
+        setLoading(false)
         setAuthToken(result.user)
         navigate(from, { replace: true })
       })
@@ -37,6 +38,7 @@ const Login = () => {
     signInWithGoogle().then(result => {
       console.log(result.user)
       setAuthToken(result.user)
+      setLoading(false)
       navigate(from, { replace: true })
     })
   }

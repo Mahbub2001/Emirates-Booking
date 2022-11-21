@@ -20,7 +20,7 @@ const SearchForm = () => {
       to: departureDate,
     }
     console.log(query)
-    // navigate('/search-result', { state: query })
+    navigate('/search-result', { state: query })
   }
 
   return (
