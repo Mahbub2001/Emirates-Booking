@@ -15,7 +15,7 @@ const MyBookings = () => {
     fetchBookings()
   }, [user])
 
-  console.log(bookings)
+  // console.log(bookings)
   return (
     <>
       {bookings && Array.isArray(bookings) && bookings.length > 0 ? (

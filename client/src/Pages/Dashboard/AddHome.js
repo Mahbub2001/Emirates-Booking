@@ -16,7 +16,7 @@ const AddHome = () => {
   const [departureDate, setDepartureDate] = useState(
     new Date(arrivalDate.getTime() + 24 * 60 * 60 * 1000)
   )
-  console.log()
+  // console.log()
   const handleSubmit = event => {
     event.preventDefault()
     const location = event.target.location.value
@@ -50,7 +50,7 @@ const AddHome = () => {
           },
         }
         addHome(homeData).then(data => {
-          console.log(data)
+          // console.log(data)
           setLoading(false)
           toast.success('Home Added!')
           navigate('/dashboard/manage-homes')
