@@ -15,7 +15,7 @@ const CheckoutForm = ({ bookingData }) => {
   const [clientSecret, setClientSecret] = useState('')
 
   const { price, guestName, guestEmail } = bookingData
-  console.log(clientSecret)
+  // console.log(clientSecret)
   useEffect(() => {
     getPaymentIntent(price).then(data => {
       if (data?.clientSecret) {
@@ -62,7 +62,7 @@ const CheckoutForm = ({ bookingData }) => {
     } else {
       setCardError('')
       setTransactionId(paymentIntent.id)
-      console.log(paymentIntent)
+      // console.log(paymentIntent)
 
       //store payment on database
       const data = {
@@ -73,7 +73,7 @@ const CheckoutForm = ({ bookingData }) => {
         .then(res => res.json())
         .then(data => {
           setProcessing(false)
-          console.log(data)
+          // console.log(data)
           toast.success('Booking Successful!')
           navigate('/dashboard/my-bookings')
         })

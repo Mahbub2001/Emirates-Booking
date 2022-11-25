@@ -11,7 +11,7 @@ export const hostRequest = async user => {
     }
   )
   const data = await response.json()
-  console.log(data)
+  // console.log(data)
   return data
 }
 
@@ -38,7 +38,7 @@ export const getAllUsers = async () => {
       authorization: `Bearer ${localStorage.getItem('aircnc-token')}`,
     },
   })
-  console.log('test')
+  // console.log('test')
   const users = await response.json()
 
   return users
